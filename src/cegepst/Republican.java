@@ -2,6 +2,7 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.CollidableRepository;
+import cegepst.engine.Sound;
 import cegepst.engine.controls.Direction;
 import cegepst.engine.entity.MovableEntity;
 
@@ -24,6 +25,8 @@ public class Republican extends MovableEntity {
     private int currentAnimationFrame = 1;
     private int nextFrame = ANIMATION_SPEED;
     private int strength;
+    private int strengthCooldown = 60;
+    private int coolddown = 0;
 
     public Republican() {
         setDimension(32, 32);
@@ -33,31 +36,12 @@ public class Republican extends MovableEntity {
         CollidableRepository.getInstance().registerEntity(this);
         loadSpriteSheet();
         loadFrames();
-        //setMoveTrue();
     }
 
     public void update(int xObjectif, int yObjextif) {
         super.update();
         move(xObjectif, yObjextif);
-        if (!hasMoved() && (getDirection() == Direction.LEFT || getDirection() == Direction.RIGHT)) {
-            y += getSpeed();
-            return;
-        } else if (!hasMoved() && (getDirection() == Direction.DOWN || getDirection() == Direction.UP)) {
-            x -= getSpeed();
-            return;
-        }
-        if (super.hasMoved()) {
-            --nextFrame;
-            if (nextFrame == 0) {
-                ++currentAnimationFrame;
-                if (currentAnimationFrame >= leftFrames.length) {
-                    currentAnimationFrame = 0;
-                }
-                nextFrame = ANIMATION_SPEED;
-            }
-        } else {
-            currentAnimationFrame = 1;
-        }
+        updateFrame();
     }
 
     @Override
@@ -74,8 +58,28 @@ public class Republican extends MovableEntity {
         drawHitBox(buffer);
     }
 
+    private void updateFrame() {
+        if (super.hasMoved()) {
+            --nextFrame;
+            if (nextFrame == 0) {
+                ++currentAnimationFrame;
+                if (currentAnimationFrame >= leftFrames.length) {
+                    currentAnimationFrame = 0;
+                }
+                nextFrame = ANIMATION_SPEED;
+            }
+        } else {
+            currentAnimationFrame = 1;
+        }
+    }
+
     public void dealDamage(MovableEntity entity) {
-        entity.receiveDamage(strength);
+        if (coolddown == strengthCooldown) {
+            entity.receiveDamage(strength);
+            Sound.play("sounds/best.wav");
+            coolddown = 0;
+        }
+        coolddown++;
     }
 
     private void move(int xObjectif, int yObjextif) {

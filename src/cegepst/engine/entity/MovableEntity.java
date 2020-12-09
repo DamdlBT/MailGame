@@ -96,10 +96,6 @@ public abstract class MovableEntity extends UpdatableEntity{
         return getHitBox().intersects(other.getBounds());
     }
 
-    public void setMoveTrue() {
-        moved = true;
-    }
-
     protected void setHealth(int health) {
         this.health = health;
     }
