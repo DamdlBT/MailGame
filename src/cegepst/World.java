@@ -9,20 +9,32 @@ import java.util.ArrayList;
 
 public class World {
 
-    private static final String MAP_PATH = "images/map.png";
-    private Image background;
+    private static final String MAP_PATH_BL = "images/mapBL.png";
+    private static final String MAP_PATH_BR = "images/mapBR.png";
+    private Image backgroundBL;
+    private Image backgroundBR;
 
     public World() {
-        loadBackground();
+        loadBackgroundBL();
+        loadBackgroundBR();
     }
 
     public void draw(Buffer buffer) {
-        buffer.drawImage(background, 0, 0);
+        buffer.drawImage(backgroundBL, 0, 0);
+        buffer.drawImage(backgroundBR, 689, 0);
     }
 
-    private void loadBackground() {
+    private void loadBackgroundBL() {
         try {
-            background = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(MAP_PATH));
+            backgroundBL = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(MAP_PATH_BL));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadBackgroundBR() {
+        try {
+            backgroundBR = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(MAP_PATH_BR));
         } catch (IOException e) {
             e.printStackTrace();
         }

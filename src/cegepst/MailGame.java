@@ -13,7 +13,6 @@ public class MailGame extends Game {
     private GamePad gamePad;
     private MailTruck mailTruck;
     private Republican[] republicans;
-    private Wall wall;
     private ArrayList<Vote> votes;
     private World world;
 
@@ -28,7 +27,6 @@ public class MailGame extends Game {
             votes.add(new Vote());
         }
         mailTruck = new MailTruck(gamePad);
-        wall = new Wall();
         world = new World();
 
     }
@@ -68,7 +66,7 @@ public class MailGame extends Game {
 
     @Override
     public void draw(Buffer buffer) {
-        //world.draw(buffer);
+        world.draw(buffer);
         mailTruck.draw(buffer);
         for (Republican republican : republicans) {
             republican.draw(buffer);
@@ -76,6 +74,5 @@ public class MailGame extends Game {
         for (Vote vote : votes) {
             vote.draw(buffer);
         }
-        wall.draw(buffer);
     }
 }
