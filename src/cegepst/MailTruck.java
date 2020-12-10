@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class MailTruck extends ControllableEntity {
 
-    private final int INITIAL_HEALTH = 100;
+    private final int INITIAL_VOTE = 100;
     private String spritePath = "images/truckUp.png";
     private BufferedImage spriteSheet;
     private Image image;
@@ -21,7 +21,7 @@ public class MailTruck extends ControllableEntity {
         super(controller);
         setSpeed(3);
         teleport(200, 200);
-        super.setHealth(INITIAL_HEALTH);
+        super.setHealth(INITIAL_VOTE);
         loadSpriteSheet();
         CollidableRepository.getInstance().registerEntity(this);
     }
@@ -39,6 +39,10 @@ public class MailTruck extends ControllableEntity {
     public void draw(Buffer buffer) {
         buffer.drawImage(spriteSheet, x, y);
         buffer.drawText(Integer.toString(health), 10, 10, Color.white);
+    }
+
+    public void addVote(int vote) {
+        this.addHealth(vote);
     }
 
     public int getCenterX() {

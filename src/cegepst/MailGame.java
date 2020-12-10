@@ -2,6 +2,7 @@ package cegepst;
 
 import cegepst.engine.Buffer;
 import cegepst.engine.Game;
+import cegepst.engine.GameTime;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -12,16 +13,21 @@ public class MailGame extends Game {
 
     private GamePad gamePad;
     private MailTruck mailTruck;
-    private Republican[] republicans;
+    private ArrayList<Republican> republicans;
     private ArrayList<Vote> votes;
+    private ArrayList<Vote> deleteVotes;
     private World world;
+    private GameOver gameOver;
+    private boolean gameOverExist;
 
     public MailGame() {
         gamePad = new GamePad();
-        republicans = new Republican[4];
+        republicans = new ArrayList<>();
         votes = new ArrayList<>();
+        deleteVotes = new ArrayList<>();
+        gameOverExist = false;
         for (int i = 0; i < 4; i++) {
-            republicans[i] = new Republican();
+            republicans.add(new Republican());
         }
         for (int i = 0; i < 8; i++) {
             votes.add(new Vote());
@@ -52,13 +58,31 @@ public class MailGame extends Game {
 
     @Override
     public void update() {
-        for (Republican republican : republicans) {
-            republican.update(mailTruck.getCenterX(), mailTruck.getCenterY());
-            if (republican.hitBoxIntersectWith(mailTruck)) {
-                republican.dealDamage(mailTruck);
+        if (mailTruck.getHealth() <= 0) {
+            gameOver = new GameOver();
+            gameOverExist = true;
+        } else {
+            for (Vote vote : deleteVotes) {
+                votes.remove(vote);
+            }
+            for (Republican republican : republicans) {
+                republican.update(mailTruck.getCenterX(), mailTruck.getCenterY());
+                if (republican.hitBoxIntersectWith(mailTruck)) {
+                    republican.dealDamage(mailTruck);
+                }
+            }
+            for (Vote vote : votes) {
+                if (mailTruck.intersectWith(vote)) {
+                    mailTruck.addVote(vote.getValue());
+                    deleteVotes.add(vote);
+                }
+            }
+            mailTruck.update();
+            if (GameTime.getElapsedTime() % 15000 == 0) {
+                votes.add(new Vote());
+                //republicans.add(new Republican());
             }
         }
-        mailTruck.update();
         if (gamePad.isQuitPressed()) {
             this.stop();
         }
@@ -73,6 +97,9 @@ public class MailGame extends Game {
         }
         for (Vote vote : votes) {
             vote.draw(buffer);
+        }
+        if (gameOverExist) {
+            gameOver.draw(buffer);
         }
     }
 }

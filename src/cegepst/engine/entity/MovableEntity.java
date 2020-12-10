@@ -63,6 +63,14 @@ public abstract class MovableEntity extends UpdatableEntity{
         health -= damage;
     }
 
+    public void addHealth(int value) {
+        health += value;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
     protected Rectangle getHitBox() {
         switch (direction){
             case UP: return getUpperHitBox();

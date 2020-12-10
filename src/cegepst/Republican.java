@@ -26,7 +26,7 @@ public class Republican extends MovableEntity {
     private int nextFrame = ANIMATION_SPEED;
     private int strength;
     private int strengthCooldown = 60;
-    private int coolddown = 0;
+    private int cooldown = 0;
 
     public Republican() {
         setDimension(32, 32);
@@ -74,12 +74,12 @@ public class Republican extends MovableEntity {
     }
 
     public void dealDamage(MovableEntity entity) {
-        if (coolddown == strengthCooldown) {
+        if (cooldown == strengthCooldown) {
             entity.receiveDamage(strength);
             Sound.play("sounds/best.wav");
-            coolddown = 0;
+            cooldown = 0;
         }
-        coolddown++;
+        cooldown++;
     }
 
     private void move(int xObjectif, int yObjextif) {
